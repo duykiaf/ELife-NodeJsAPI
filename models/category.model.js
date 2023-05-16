@@ -46,3 +46,5 @@ Category.updateCategory = function (data, response) {
             }
         });
 }
+
+module.exports = Category;

@@ -61,3 +61,5 @@ Audio.updateAudio = function (data, result) {
             }
         });
 }
+
+module.exports = Audio;

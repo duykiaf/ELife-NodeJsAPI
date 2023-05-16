@@ -49,3 +49,5 @@ Topic.updateTopic = function (data, response) {
             }
         });
 }
+
+module.exports = Topic;
