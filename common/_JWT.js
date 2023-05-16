@@ -1,67 +1,37 @@
 const jwt = require('jsonwebtoken');
-const _APP = require('./_APP');
+require('dotenv').config();
 
-// create access token
-let accessToken = function (user) {
-    return new Promise(function (resolve, reject) {
-        jwt.sign({ data: user }, _APP.ACCESS_TOKEN, {
-            algorithm: "HS256",
-            expiresIn: _APP.ACCESS_TOKEN_TIME_LIFE
-        }, function (err, _token) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(_token);
-            }
-        });
+let generateToken = (user, secretSignature, tokenTimeLife) => {
+    return new Promise((resolve, reject) => {
+        // Thực hiện ký và tạo token
+        jwt.sign(
+            { data: user },
+            secretSignature,
+            {
+                algorithm: "HS256",
+                expiresIn: tokenTimeLife,
+            },
+            (error, token) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(token);
+            });
     });
 }
 
-// create refresh token
-let refreshToken = function (user) {
-    return new Promise(function (resolve, reject) {
-        jwt.sign({ data: user }, _APP.REFRESH_TOKEN, {
-            algorithm: "HS256",
-            expiresIn: _APP.REFRESH_TOKEN_TIME_LIFE
-        }, function (err, _token) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(_token);
+let verifyToken = (token, secretKey) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, secretKey, (error, decoded) => {
+            if (error) {
+                return reject(error);
             }
-        });
-    });
-}
-
-// check access token validity
-let checkAccessToken = function(token) {
-    return new Promise(function (resolve, reject) {
-        jwt.verify(token, _APP.ACCESS_TOKEN, function (err, decoded) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(decoded);
-            }
-        });
-    });
-}
-
-// check refresh token validity
-let checkRefreshToken = function(token) {
-    return new Promise(function (resolve, reject) {
-        jwt.verify(token, _APP.REFRESH_TOKEN, function (err, decoded) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(decoded);
-            }
+            resolve(decoded);
         });
     });
 }
 
 module.exports = {
-    accessToken: accessToken,
-    refreshToken: refreshToken,
-    checkAccessToken: checkAccessToken,
-    checkRefreshToken: checkRefreshToken
-}
+    generateToken: generateToken,
+    verifyToken: verifyToken,
+};
