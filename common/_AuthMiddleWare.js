@@ -1,20 +1,32 @@
-let isAuth = async function (req, res, next) {
-    var _JWT = require('./_JWT')
-    var _accessToken = req.headers.authorization;
-    var _refreshToken = req.headers.refreshtoken;
-    if (_accessToken || _refreshToken) {
+const _JWT = require('./_JWT');
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secret-default-dnvisme-meisdnv-@";
+
+let isAuth = async (req, res, next) => {
+    const tokenFromClient = req.body.token || req.query.token || req.headers["x-access-token"];
+    if (tokenFromClient) {
+        // Nếu tồn tại token
         try {
-            var authData = await _JWT.checkAccessToken(_accessToken);
-            req.auth = authData;
+            // Thực hiện giải mã token xem có hợp lệ hay không?
+            const decoded = await _JWT.verifyToken(tokenFromClient, accessTokenSecret);
+            // Nếu token hợp lệ, lưu thông tin giải mã được vào đối tượng req, dùng cho các xử lý ở phía sau.
+            req.jwtDecoded = decoded;
+            // Cho phép req đi tiếp sang controller.
             next();
-        } catch (err) {
-            return res.send({Error: 'Token not valid!'})
+        } catch (error) {
+            // Nếu giải mã gặp lỗi: Không đúng, hết hạn...etc:
+            console.log("Error while verify token:", error);
+            return res.status(401).json({
+                message: 'Unauthorized.',
+            });
         }
     } else {
-        return res.send({Error: 'Error attaching token!'})
+        // Không tìm thấy token trong request
+        return res.status(403).send({
+            message: 'No token provided.',
+        });
     }
+}
+module.exports = {
+    isAuth: isAuth
 };
-
-module.exports = { isAuth: isAuth }
-
-// chua co router create token
