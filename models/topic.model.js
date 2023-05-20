@@ -29,6 +29,17 @@ Topic.getById = function (id, result) {
         });
 };
 
+Topic.getTopicsListByCategoryId = function(categoryId, result) {
+    db.query("SELECT * FROM topic WHERE category_id =?",
+        [categoryId], function (err, topics) {
+            if (err || topics.length === 0) {
+                result({ err: "Error getting topics list by category id" });
+            } else {
+                result(topics);
+            }
+        });
+};
+
 Topic.addTopic = function (data, response) {
     db.query("INSERT INTO topic SET ?", data, function (err, topic) {
         if (err) {

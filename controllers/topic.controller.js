@@ -12,6 +12,12 @@ exports.getById = function(req, res) {
     })
 }
 
+exports.getTopicsListByCategoryId = function(req, res) {
+    topicModel.getTopicsListByCategoryId(req.params.id, function(list) {
+        res.send({list: list});
+    })
+}
+
 exports.addTopic = function(req, res) {
     var data = req.body;
     topicModel.addTopic(data, function(topic) {

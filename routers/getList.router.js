@@ -7,5 +7,7 @@ module.exports = function(router) {
 
     router.get('/topic/list', topicController.getTopicsList);
 
+    routter.get('/topic/list-by-category-id', topicController.getTopicsListByCategoryId);
+
     router.get('/audio/list', audioController.getAudiosList);
 }
