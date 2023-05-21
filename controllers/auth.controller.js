@@ -1,14 +1,13 @@
 const _JWT = require('../common/_JWT');
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || "access-token-secret-default-dnvisme-meisdnv-@";
-const accessTokenTimeLife = process.env.ACCESS_TOKEN_TIME_LIFE || "1m";
+const accessTokenTimeLife = process.env.ACCESS_TOKEN_TIME_LIFE || "1h";
 
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || "refresh-token-secret-default-dnvisme-meisdnv-@";
-const refreshTokenTimeLife = process.env.REFRESH_TOKEN_TIME_LIFE || "5m";
+const refreshTokenTimeLife = process.env.REFRESH_TOKEN_TIME_LIFE || "30d";
 
 let createToken = async (req, res) => {
     try {
-        // fake user
         const user = {
             email: req.body.email,
             password: req.body.password
