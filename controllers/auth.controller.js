@@ -14,9 +14,17 @@ let createToken = async (req, res) => {
         }
         const accessToken = await _JWT.generateToken(user, accessTokenSecret, accessTokenTimeLife);
         const refreshToken = await _JWT.generateToken(user, refreshTokenSecret, refreshTokenTimeLife);
-        return res.status(200).json({ accessToken, refreshToken });
+        return res.status(200).json({
+            accessToken,
+            refreshToken,
+            message: "generate successfully"
+        });
     } catch (error) {
-        return res.status(500).json(error);
+        return res.status(500).json({
+            accessToken: "",
+            refreshToken: "",
+            message: "Error system, please try again!"
+        });
     }
 }
 
@@ -25,6 +33,8 @@ let refreshToken = async (req, res) => {
 
     if (!refreshTokenFromClient) {
         return res.status(403).send({
+            accessToken: "",
+            refreshToken: "",
             message: 'No token provided.',
         });
     } else {
@@ -40,10 +50,16 @@ let refreshToken = async (req, res) => {
             const accessToken = await _JWT.generateToken(userData, accessTokenSecret, accessTokenTimeLife);
 
             // gửi token mới về cho người dùng
-            return res.status(200).json({ accessToken });
+            return res.status(200).json({
+                accessToken,
+                refreshToken: refreshTokenFromClient,
+                message: "refresh token successfully"
+            });
         } catch (error) {
             console.log(error);
             res.status(403).json({
+                accessToken: "",
+                refreshToken: refreshTokenFromClient,
                 message: 'Invalid refresh token.',
             });
         }
