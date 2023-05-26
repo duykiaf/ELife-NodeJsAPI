@@ -12,6 +12,12 @@ exports.getById = function (req, res) {
     });
 }
 
+exports.getByName = function (req, res) {
+    categoryModel.getByName(req.params.name, function (data) {
+        res.send({ category: data });
+    });
+}
+
 exports.addCategory = function (req, res) {
     var data = req.body;
     categoryModel.addCategory(data, function (response) {

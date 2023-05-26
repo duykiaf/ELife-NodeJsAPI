@@ -3,6 +3,8 @@ module.exports = function (router) {
 
     router.get('/category/get-by-id/:id', categoryController.getById);
 
+    router.get('/category/get-by-name/:name', categoryController.getByName);
+
     router.post('/category/create', categoryController.addCategory);
 
     router.put('/category/update', categoryController.updateCategory);

@@ -26,6 +26,16 @@ Category.getById = function (id, result) {
     });
 };
 
+Category.getByName = function(name, result) {
+    db.query("SELECT * FROM category WHERE name = ?", [name], function(err, rows) {
+        if (err || rows.length === 0) {
+            result(null);
+        } else {
+            result(rows[0]);
+        }
+    });
+}
+
 Category.addCategory = function (data, response) {
     db.query("INSERT INTO category SET ?", data, function (err, newCategory) {
         if (err) {
