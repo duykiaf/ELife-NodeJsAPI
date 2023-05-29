@@ -9,7 +9,7 @@ const Category = function (category) {
 Category.getCategoriesList = function (result) {
     db.query("SELECT * FROM category", function (err, rows) {
         if (err) {
-            result({ err: "Error getting categories list" });
+            result(null);
         } else {
             result(rows);
         }
@@ -18,20 +18,20 @@ Category.getCategoriesList = function (result) {
 
 Category.getById = function (id, result) {
     db.query("SELECT * FROM category WHERE id =?", [id], function (err, rows) {
-        if (err || rows.length === 0) {
-            result({ err: "Error getting category by id" });
+        if (err) {
+            result(null);
         } else {
-            result(rows[0]);
+            result(rows);
         }
     });
 };
 
 Category.getByName = function(name, result) {
     db.query("SELECT * FROM category WHERE name = ?", [name], function(err, rows) {
-        if (err || rows.length === 0) {
+        if (err) {
             result(null);
         } else {
-            result(rows[0]);
+            result(rows);
         }
     });
 }
@@ -39,7 +39,7 @@ Category.getByName = function(name, result) {
 Category.addCategory = function (data, response) {
     db.query("INSERT INTO category SET ?", data, function (err, newCategory) {
         if (err) {
-            response({ err: "Error inserting category" });
+            response(null);
         } else {
             response({ id: newCategory.insertId, category: newCategory });
         }
@@ -50,7 +50,7 @@ Category.updateCategory = function (data, response) {
     db.query("UPDATE category SET name=?, status=? WHERE id =?",
         [data.name, data.status, data.id], function (err, updatedCategory) {
             if (err) {
-                response({ err: "Error updating category" });
+                response(null);
             } else {
                 response(updatedCategory);
             }
