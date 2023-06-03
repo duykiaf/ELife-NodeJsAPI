@@ -20,18 +20,17 @@ let generateToken = (user, secretSignature, tokenTimeLife) => {
     });
 }
 
-let verifyToken = (token, secretKey) => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, secretKey, (error, decoded) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(decoded);
-        });
-    });
+const verifyToken = (token, secret, onSuccess, onFailed) => {
+    jwt.verify(token, secret, (error, decode) => {
+        if (error) {
+            onFailed(error);
+            return;
+        }
+        onSuccess(decode);
+    })
 }
 
 module.exports = {
     generateToken: generateToken,
-    verifyToken: verifyToken,
+    verifyToken: verifyToken
 };
