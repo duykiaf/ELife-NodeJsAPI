@@ -14,59 +14,66 @@ let createToken = async (req, res) => {
         }
         const accessToken = await _JWT.generateToken(user, accessTokenSecret, accessTokenTimeLife);
         const refreshToken = await _JWT.generateToken(user, refreshTokenSecret, refreshTokenTimeLife);
-        return res.status(200).json({
+        return res.status(200).send(JSON.stringify({
             accessToken,
             refreshToken,
             message: "generate successfully"
-        });
+        }));
     } catch (error) {
-        return res.status(500).json({
+        return res.status(500).send(JSON.stringify({
             accessToken: "",
             refreshToken: "",
             message: "Error system, please try again!"
-        });
+        }));
     }
 }
 
-let refreshToken = async (req, res) => {
-    const refreshTokenFromClient = req.body.refreshToken;
-
-    if (!refreshTokenFromClient) {
-        return res.status(403).send({
-            accessToken: "",
-            refreshToken: "",
-            message: 'No token provided.',
+let checkToken = async (req, res) => {
+    const accessTokenFromClient = req.header('x-access-token');
+    const refreshTokenFromClient = req.header('x-refresh-token');
+    if (accessTokenFromClient && refreshTokenFromClient) {
+        _JWT.verifyToken(accessTokenFromClient, accessTokenSecret, (decoded) => {
+            // success
+            req.jwtDecoded = decoded;
+            console.log("checkToken: Verify access token successfully");
+            res.status(200).send(JSON.stringify({
+                accessToken: accessTokenFromClient,
+                refreshToken: refreshTokenFromClient,
+                message: "verify access token successfully"
+            }));
+        }, (error) => {
+            console.log("checkToken: Start refresh token");
+            // goi callback thay vi dung promise vi jwt.verify khong phai bat dong bo
+            _JWT.verifyToken(refreshTokenFromClient, refreshTokenSecret, async (decoded) => {
+                const userData = decoded.data;
+                const accessToken = await _JWT.generateToken(userData, accessTokenSecret, accessTokenTimeLife);
+                console.log("Refresh token successfully");
+                res.status(200).send(JSON.stringify({
+                    accessToken,
+                    refreshToken: refreshTokenFromClient,
+                    message: "refresh token successfully"
+                }));
+            }, (error) => {
+                console.log("checkToken: Refresh token expired");
+                res.status(403).send(JSON.stringify({
+                    accessToken: "",
+                    refreshToken: "",
+                    message: "refresh token expired"
+                }));
+            });
         });
     } else {
-        try {
-            // Verify kiểm tra tính hợp lệ của refreshToken và lấy dữ liệu giải mã decoded 
-            const decoded = await _JWT.verifyToken(refreshTokenFromClient, refreshTokenSecret);
-
-            // lấy thông qua biến decoded.data
-            // console.log(decoded);
-            const userData = decoded.data;
-
-            // Thực hiện tạo mã Token trong bước gọi refresh Token
-            const accessToken = await _JWT.generateToken(userData, accessTokenSecret, accessTokenTimeLife);
-
-            // gửi token mới về cho người dùng
-            return res.status(200).json({
-                accessToken,
-                refreshToken: refreshTokenFromClient,
-                message: "refresh token successfully"
-            });
-        } catch (error) {
-            console.log(error);
-            res.status(403).json({
-                accessToken: "",
-                refreshToken: refreshTokenFromClient,
-                message: 'Invalid refresh token.',
-            });
-        }
+        console.log("checkToken: Token not found");
+        res.status(400).send(JSON.stringify({
+            accessToken: "",
+            refreshToken: "",
+            message: "token not found"
+        }));
     }
+
 }
 
 module.exports = {
     createToken: createToken,
-    refreshToken: refreshToken,
+    checkToken: checkToken
 }
