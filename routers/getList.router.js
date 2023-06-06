@@ -5,6 +5,8 @@ module.exports = function(router) {
 
     router.get('/category/list', categoryController.getCategoriesList);
 
+    router.get('/category/get-active-categories', categoryController.getActiveCategoriesList);
+
     router.get('/topic/list', topicController.getTopicsList);
 
     router.get('/topic/list-by-category-id/:id', topicController.getTopicsListByCategoryId);

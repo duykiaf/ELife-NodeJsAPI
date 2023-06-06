@@ -16,8 +16,8 @@ Category.getCategoriesList = function (result) {
     });
 }
 
-Category.getById = function (id, result) {
-    db.query("SELECT * FROM category WHERE id =?", [id], function (err, rows) {
+Category.getActiveCategoriesList = function (result) {
+    db.query("SELECT * FROM category WHERE status =?", [1], function (err, rows) {
         if (err) {
             result(null);
         } else {

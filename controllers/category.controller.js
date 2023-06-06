@@ -6,8 +6,8 @@ exports.getCategoriesList = function (req, res) {
     })
 }
 
-exports.getById = function (req, res) {
-    categoryModel.getById(req.params.id, function (data) {
+exports.getActiveCategoriesList = function (req, res) {
+    categoryModel.getActiveCategoriesList(function (data) {
         res.json(data);
     });
 }
