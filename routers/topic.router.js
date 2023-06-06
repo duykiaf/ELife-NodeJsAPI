@@ -1,7 +1,7 @@
 module.exports = function(router) {
     var topicController = require('../controllers/topic.controller');
 
-    router.get('/topic/get-by-id/:id', topicController.getById);
+    router.get('/topic/get-by-name/:name', topicController.getByName);
 
     router.post('/topic/create', topicController.addTopic);
 

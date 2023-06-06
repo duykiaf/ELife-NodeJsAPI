@@ -11,29 +11,29 @@ const Topic = function (topic) {
 Topic.getTopicsList = function (result) {
     db.query('SELECT * FROM topic', function (err, topic) {
         if (err) {
-            result({ err: "Error getting topics list" });
+            result(null);
         } else {
             result(topic);
         }
     });
 }
 
-Topic.getById = function (id, result) {
-    db.query("SELECT topic.*, category.name AS category_name FROM topic JOIN category ON topic.category_id = category.id WHERE topic.id =?",
-        [id], function (err, topic) {
-            if (err || topic.length === 0) {
-                result({ err: "Error getting topic by id" });
+Topic.getByName = function (name, result) {
+    db.query("SELECT * FROM topic WHERE name =?",
+        [name], function (err, topic) {
+            if (err) {
+                result(null);
             } else {
-                result(topic[0]);
+                result(topic);
             }
         });
 };
 
-Topic.getTopicsListByCategoryId = function(categoryId, result) {
+Topic.getTopicsListByCategoryId = function (categoryId, result) {
     db.query("SELECT * FROM topic WHERE category_id =?",
         [categoryId], function (err, topics) {
-            if (err || topics.length === 0) {
-                result({ err: "Error getting topics list by category id" });
+            if (err) {
+                result(null);
             } else {
                 result(topics);
             }
@@ -41,9 +41,9 @@ Topic.getTopicsListByCategoryId = function(categoryId, result) {
 };
 
 Topic.addTopic = function (data, response) {
-    db.query("INSERT INTO topic SET ?", data, function (err, topic) {
+    db.query("INSERT INTO topic SET ?", [data], function (err, topic) {
         if (err) {
-            response({ err: "Error inserting topic" });
+            response(null);
         } else {
             response({ id: topic.insertId, topic: topic });
         }
@@ -54,7 +54,7 @@ Topic.updateTopic = function (data, response) {
     db.query("UPDATE topic SET name=?, image=?, category_id=?, status=? WHERE id =?",
         [data.name, data.image, data.category_id, data.status, data.id], function (err, topic) {
             if (err) {
-                response({ err: "Error updating topic" });
+                response(null);
             } else {
                 response(topic);
             }
