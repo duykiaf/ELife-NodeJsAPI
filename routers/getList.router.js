@@ -9,6 +9,8 @@ module.exports = function(router) {
 
     router.get('/topic/list', topicController.getTopicsList);
 
+    router.get('/topic/get-active-topics', topicController.getActiveTopicsList);
+
     router.get('/topic/list-by-category-id/:id', topicController.getTopicsListByCategoryId);
 
     router.get('/audio/list', audioController.getAudiosList);
