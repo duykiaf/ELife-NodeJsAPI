@@ -40,6 +40,16 @@ Topic.getTopicsListByCategoryId = function (categoryId, result) {
         });
 };
 
+Topic.getActiveTopicsList = function (result) {
+    db.query("SELECT * FROM topic WHERE status = 1", function (err, topics) {
+        if (err) {
+            result(null);
+        } else {
+            result(topics);
+        }
+    });
+};
+
 Topic.addTopic = function (data, response) {
     db.query("INSERT INTO topic SET ?", [data], function (err, topic) {
         if (err) {

@@ -18,6 +18,12 @@ exports.getTopicsListByCategoryId = function(req, res) {
     })
 }
 
+exports.getActiveTopicsList = function(req, res) {
+    topicModel.getActiveTopicsList(function(list) {
+        res.send(list);
+    })
+}
+
 exports.addTopic = function(req, res) {
     var data = req.body;
     topicModel.addTopic(data, function(topic) {
