@@ -1,4 +1,4 @@
-module.exports = function(router) {
+module.exports = function (router) {
     var categoryController = require('../controllers/category.controller');
     var topicController = require('../controllers/topic.controller');
     var audioController = require('../controllers/audio.controller');
@@ -14,4 +14,6 @@ module.exports = function(router) {
     router.get('/topic/list-by-category-id/:id', topicController.getTopicsListByCategoryId);
 
     router.get('/audio/list', audioController.getAudiosList);
+
+    router.get('/audio/get-list-by-topic/:id', audioController.getActiveAudiosListByTopicId);
 }
