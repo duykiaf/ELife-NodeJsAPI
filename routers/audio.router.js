@@ -5,9 +5,6 @@ module.exports = function (router) {
 
     router.get('/audio/get-by-title/:title', audioController.getAudioByTitle);
 
-    router.get('/audio/get-active-audios-list-by-topic-id/:id',
-        audioController.getActiveAudiosListByTopicId);
-
     router.post('/audio/create', audioController.addAudio);
 
     router.put('/audio/update', audioController.updateAudio);
