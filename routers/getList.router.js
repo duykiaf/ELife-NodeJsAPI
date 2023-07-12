@@ -16,4 +16,6 @@ module.exports = function (router) {
     router.get('/audio/list', audioController.getAudiosList);
 
     router.get('/audio/get-list-by-topic/:id', audioController.getActiveAudiosListByTopicId);
+
+    router.get('/audio/get-by-id/:id', audioController.getAudioById);
 }

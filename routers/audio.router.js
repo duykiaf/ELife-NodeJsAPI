@@ -1,8 +1,6 @@
 module.exports = function (router) {
     var audioController = require('../controllers/audio.controller');
 
-    router.get('/audio/get-by-id/:id', audioController.getAudioById);
-
     router.get('/audio/get-by-title/:title', audioController.getAudioByTitle);
 
     router.post('/audio/create', audioController.addAudio);

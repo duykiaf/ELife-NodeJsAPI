@@ -21,7 +21,7 @@ Audio.getAudiosList = function (result) {
 }
 
 Audio.getAudioById = function (id, result) {
-    db.query('SELECT audio.*, topic.name AS topic_name FROM audio JOIN topic ON audio.topic_id = topic.id WHERE id =?',
+    db.query('SELECT * FROM audio WHERE id =?',
         [id], (err, rows) => {
             if (err) {
                 result(null);
